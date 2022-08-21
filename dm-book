@@ -1,0 +1,10 @@
+#!/bin/sh
+
+site='http://irbis-nbuv.gov.ua/E_LIB/PDF/'
+word=$(printf '' | dmenu -p 'Enter pdf name: ')
+
+if [ "$word" ]; then
+    ${BROWSER} $(printf '%s.pdf\n' "$site$word")
+else
+    echo "Program terminated." && exit 0
+fi

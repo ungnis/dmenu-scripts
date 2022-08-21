@@ -1,0 +1,17 @@
+#!/bin/sh
+
+layout_dir="/usr/share/X11/xkb/symbols/"
+
+layout_list="$(find $layout_dir -maxdepth 1 -type f | sort -g)"
+
+choice=$(printf 'ua\ngl\npl\nde\n%s\n' "$layout_list[@]" | \
+         cut -d '/' -f7 | \
+         dmenu -i -p '' "$@") || exit 1
+
+if [ "$choice" ]; then
+    layout set $choice
+else
+    echo "Program terminated." && exit 0
+fi
+
+

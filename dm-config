@@ -1,0 +1,38 @@
+#!/bin/sh
+
+declare -A config_list
+config_list[alias]="$XDG_CONFIG_HOME/shell/aliasrc"
+config_list[i3]="$XDG_CONFIG_HOME/i3/config"
+config_list[lf]="$XDG_CONFIG_HOME/lf/lfrc"
+config_list[library]="$XDG_CONFIG_HOME/library"
+config_list[mimeapps]="$XDG_CONFIG_HOME/mimeapps.list"
+config_list[newsboat]="$XDG_CONFIG_HOME/newsboat/config"
+config_list[ranger]="$XDG_CONFIG_HOME/ranger/rc.conf"
+config_list[sxiv]="$XDG_CONFIG_HOME/sxiv/exec/key-handler"
+config_list[urls]="$XDG_CONFIG_HOME/newsboat/urls"
+config_list[user-dirs]="$XDG_CONFIG_HOME/user-dirs.dirs"
+config_list[vim]="$XDG_CONFIG_HOME/vim/vimrc"
+config_list[xinit]="$XDG_CONFIG_HOME/X11/xinitrc"
+config_list[xprofile]="$XDG_CONFIG_HOME/X11/xprofile"
+config_list[xresources]="$XDG_CONFIG_HOME/X11/xresources"
+config_list[zathura]="$XDG_CONFIG_HOME/zathura/zathurarc"
+config_list[zprofile]="$HOME/.zprofile"
+config_list[zsh]="$XDG_CONFIG_HOME/zsh/.zshrc"
+
+query="$(echo $(find $XDG_SOURCE_HOME/* -maxdepth 1 -iname config*))"
+for i in $query; do
+    config_list[$(echo $i | awk -F/ '{print $(NF-1)}')]=$i
+done
+
+query="$(echo $(find $XDG_SCRIPT_HOME/* -not -type d -not -iname *.appimage))"
+for i in $query; do
+    config_list[$(echo $i | awk -F/ '{print $NF}')]=$i
+done
+
+choice=$(printf '%s\n' "${!config_list[@]}" | \
+         sort | \
+         dmenu -i -l 20 -p 'Edit config:' "$@")
+
+if [ "$choice" ]; then
+    $TERMINAL $EDITOR "${config_list[${choice}]}"
+fi

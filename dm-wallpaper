@@ -1,0 +1,24 @@
+#!/bin/sh
+
+walldir="$HOME/pic/wp" 
+tmpdir=$walldir+"/tmp"
+tags="#4K\n#nature\n#landscape\n#simple background"
+if [ -z $1 ]; then
+    query=$(echo -e $tags | dmenu -p "Search wallpapers: " | sed -e 's/ /+/g' -e 's/#//g')
+    if [ -z "$query" ]; then
+        exit 1
+    fi
+else
+    query=$1
+fi
+apikey="tpt4TlGpbunYMzT5axza1aTvfubGYLtk"
+res="1920x1080"
+ratio="16x9"
+purity=111 # (sfw/sketchy/nsfw)
+num=50
+url="https://wallhaven.cc/api/v1/search?apikey=$apikey&atleast=$atleast&ratios=$ratio&purity=$purity&per_page=$num&q=$query" 
+page=$(curl -s $url | jq '.' | grep -Eoh "https:\/\/w.wallhaven.cc\/full\/.*(png|jpg)\b") &&
+notify-send "Getting wallpapers..."
+wget -nc -P $tmpdir $page
+sxiv -bf $tmpdir/*
+mv $tmpdir/* $walldir

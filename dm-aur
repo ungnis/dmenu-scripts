@@ -1,0 +1,12 @@
+#!/bin/sh
+
+aur="https://aur.archlinux.org/packages?O=0&K="
+
+search=$(dmenu -i -p 'Arch User Repository: ') || exit 1
+
+if [ "$search" ]; then
+    results=$(printf '%s\n' "${aur}${search}" | sed 's/ /_/g')
+    ${BROWSER} "$results"
+else
+    echo "Program terminated." && exit 0
+fi

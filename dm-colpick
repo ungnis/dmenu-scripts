@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# dm-colpick config
+declare -A colpick_list
+colpick_list[black]="#282a36"
+colpick_list[red]="#ff5555"
+colpick_list[green]="#5af78e"
+colpick_list[yellow]="#f1fa8c"
+colpick_list[blue]="#57c7ff"
+colpick_list[magenta]="#ff6ac1"
+colpick_list[cyan]="#8be9fd"
+colpick_list[white]="#f1f1f0"
+colpick_list[orange]="#ffb86c"
+colpick_list[purple]="#bd9cf9"
+
+# As this is loaded from other file it is technically not defined
+# shellcheck disable=SC2154
+selected="$(printf '%s\n' "${!colpick_list[@]}" | dmenu -p "color:" "$@")"
+[ -z "${selected}" ] && exit 1
+echo "${colpick_list["${selected}"]}" | cp2cb

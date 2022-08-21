@@ -1,0 +1,5 @@
+#!/bin/sh
+
+name=$(dmenu -i -p 'Enter password name: ')
+length=$(dmenu -i -p 'Enter password length: ')
+pass generate -c $name $length
